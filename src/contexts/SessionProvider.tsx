@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useState } from "react";
+import { ReactNode, createContext, useEffect, useState } from "react";
 import { CookieNameOptions, getCookie, setCookie } from "../helpers";
 import { DIFFICULTY } from "./contexts.types";
 import { useCreateSession } from "../queries";
@@ -26,7 +26,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     getCookie(CookieNameOptions.sessionToken)
   );
   const [playerName, setPlayerName] = useState<string>(
-    getCookie(CookieNameOptions.playerName) as string
+    getCookie(CookieNameOptions.playerName) || ""
   );
   const [difficulty, setDifficulty] = useState<string>(
     getCookie(CookieNameOptions.difficulty) as DIFFICULTY
@@ -74,9 +74,16 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
   async function onSaveSession() {
     if (playerName && difficulty) {
-      createSession.fetchQuery("createSession");
+      createSession.queryClient.fetchQuery("createSession");
     }
   }
+
+  useEffect(() => {
+    if (!playerName || !sessionToken || !difficulty) {
+      navigate("/");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [difficulty, playerName, sessionToken]);
 
   return (
     <SessionContext.Provider value={session}>

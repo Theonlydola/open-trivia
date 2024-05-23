@@ -1,5 +1,6 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
 import { CookieNameOptions, getObjectCookie, setCookie } from "../helpers";
+import { useNavigate } from "react-router-dom";
 
 type IScore = {
   playedCategories: number[];
@@ -17,10 +18,11 @@ export const ScoreContext = createContext<IScore>({
 });
 
 export function ScoreProvider({ children }: { children: ReactNode }) {
+  const navigate = useNavigate();
   const obj: IScore = getObjectCookie(CookieNameOptions.score);
   const _score: IScore = {
-    playedCategories: obj?.["playedCategories"] || [],
-    score: obj?.["score"] || 0,
+    playedCategories: obj?.playedCategories || [],
+    score: obj?.score || 0,
     maxCategories: 3,
     maxQuestions: 3,
     onScoreChange,
@@ -30,15 +32,20 @@ export function ScoreProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { onScoreChange, ...restScore } = score;
-
     setCookie({
       name: CookieNameOptions.score,
       value: JSON.stringify(restScore),
     });
   }, [score]);
 
+  useEffect(() => {
+    if (score.playedCategories.length >= score.maxCategories)
+      navigate("/results");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   function onScoreChange(entity: keyof IScore, value: unknown) {
-    setScore({ ...score, [entity]: value });
+    setScore((prevState) => ({ ...prevState, [entity]: value }));
   }
 
   return (
