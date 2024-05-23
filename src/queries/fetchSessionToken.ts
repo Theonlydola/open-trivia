@@ -11,7 +11,7 @@ type IFetchSessionTokenResponse = {
 async function fetchSessionToken() {
   const res = await fetchFn({
     endpoint: "api_token",
-    queryParams: "/command=request",
+    queryParams: "?command=request",
   });
   return res.json();
 }
@@ -21,11 +21,11 @@ export function useCreateSession(
 ) {
   const queryClient = useQueryClient();
 
-  useQuery<IFetchSessionTokenResponse, unknown, IFetchSessionTokenResponse>(
+  const { isLoading, isError } = useQuery<IFetchSessionTokenResponse, Error>(
     "createSession",
     fetchSessionToken,
     options
   );
 
-  return queryClient;
+  return { isLoading, isError, queryClient };
 }

@@ -4,9 +4,10 @@ import { UseMutationOptions } from "react-query";
 
 export type IFetchQueryOptions<T> = {
   onSuccess?: (data: T) => void;
-  onError?: (error: unknown) => void;
+  onError?: (error: Error) => void;
   manual?: boolean;
   enabled?: boolean;
+  refetchOnWindowFocus?: boolean;
 };
 
 export type IMutationCallback<T> =

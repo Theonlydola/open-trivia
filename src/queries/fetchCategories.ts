@@ -19,7 +19,7 @@ async function fetchCategories() {
 export function useFetchCategories(
   options: IFetchQueryOptions<IFetchCategoriesResponse>
 ) {
-  return useQuery<IFetchCategoriesResponse, unknown, IFetchCategoriesResponse>(
+  return useQuery<IFetchCategoriesResponse, Error>(
     "fetchCategories",
     fetchCategories,
     options
