@@ -5,16 +5,22 @@ import { useNavigate } from "react-router-dom";
 type IScore = {
   playedCategories: number[];
   score: number;
+  wrongAnswers: number;
+  skipped: number;
   maxCategories: number;
   maxQuestions: number;
+  totalTimeSpent: number;
   onScoreChange?: (entity: keyof IScore, value: unknown) => void;
 };
 
 export const ScoreContext = createContext<IScore>({
   playedCategories: [],
   score: 0,
+  wrongAnswers: 0,
+  skipped: 0,
   maxCategories: 3,
   maxQuestions: 3,
+  totalTimeSpent: 0,
 });
 
 export function ScoreProvider({ children }: { children: ReactNode }) {
@@ -23,10 +29,14 @@ export function ScoreProvider({ children }: { children: ReactNode }) {
   const _score: IScore = {
     playedCategories: obj?.playedCategories || [],
     score: obj?.score || 0,
+    wrongAnswers: obj?.wrongAnswers || 0,
+    skipped: obj?.skipped || 0,
+    totalTimeSpent: obj?.totalTimeSpent || 0,
     maxCategories: 3,
     maxQuestions: 3,
     onScoreChange,
   };
+
   const [score, setScore] = useState<IScore>(_score);
 
   useEffect(() => {

@@ -1,19 +1,33 @@
 import { useEffect, useState, MouseEvent } from "react";
 import styled from "styled-components";
 import { IQuestionProps } from "./Quiz.types";
+import { Countdown } from "./Countdown";
+import { DIFFICULTY } from "../../contexts";
 
 function getRandomInt() {
   return Math.floor(Math.random() * (3 - 0 + 1));
 }
 
+const TIME_LIMIT = {
+  [DIFFICULTY.EASY]: 1.5,
+  [DIFFICULTY.MEDIUM]: 1,
+  [DIFFICULTY.HARD]: 0.5,
+};
+
 export function Question({
-  question: { type, question, correct_answer, incorrect_answers },
+  question: { difficulty, type, question, correct_answer, incorrect_answers },
   onAnswer,
+  onCountdownReset,
+  onCountdownFinished,
 }: IQuestionProps) {
   const [answer, setAnswer] = useState<string | null>(null);
   const [allAnswers, setAllAnswers] = useState<string[]>([]);
+  difficulty === "easy";
+  const [timer, setTimer] = useState(TIME_LIMIT[difficulty]);
+  const [shouldReset, setShouldReset] = useState(false);
 
   useEffect(() => {
+    setShouldReset(false);
     if (type === "boolean") {
       setAllAnswers(["True", "False"]);
     } else {
@@ -23,25 +37,38 @@ export function Question({
       }
       setAllAnswers(incorrect_answers);
     }
-  }, [type, correct_answer, incorrect_answers]);
+  }, [type, correct_answer, incorrect_answers, difficulty]);
 
   useEffect(() => {
-    if (answer) {
-      if (answer === correct_answer) {
-        onAnswer("correct");
-      } else {
-        onAnswer("incorrect");
-      }
+    if (!answer) return;
+    if (answer === correct_answer) {
+      onAnswer("correct");
+    } else {
+      onAnswer("incorrect");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [answer]);
 
   function onClick(event: MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
+    setShouldReset(true);
+    setTimer(TIME_LIMIT[difficulty]);
     setAnswer(event.currentTarget.name);
   }
+
+  function _onCountdownFinished(elapsedTime: number) {
+    setShouldReset(true);
+    onCountdownFinished(elapsedTime);
+  }
+
   return (
     <>
+      <Countdown
+        targetTimeInMinutes={timer}
+        shouldReset={shouldReset}
+        onReset={onCountdownReset}
+        onFinish={_onCountdownFinished}
+      />
       {/* Bad Security Practice but, easiest to allow HTML entities in strings */}
       <H2 dangerouslySetInnerHTML={{ __html: `${question}` }} />
       <AnswersGrid>

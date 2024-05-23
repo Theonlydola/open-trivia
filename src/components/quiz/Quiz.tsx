@@ -15,6 +15,9 @@ export function Quiz() {
     maxQuestions,
     playedCategories,
     score,
+    wrongAnswers,
+    skipped,
+    totalTimeSpent,
     maxCategories,
     onScoreChange,
   } = ScoreContext;
@@ -48,12 +51,8 @@ export function Quiz() {
     }
   }, [data?.results, status]);
 
-  function onAnswer(answer: IAnswer) {
+  function proceed() {
     if (!questions) return;
-    if (answer === "correct") {
-      onScoreChange?.("score", score + 10);
-    }
-
     if (currentQuestion < questions.length - 1)
       setCurrentQuestion(currentQuestion + 1);
     else {
@@ -62,7 +61,32 @@ export function Quiz() {
     }
   }
 
+  function onCountdownReset(elapsedTime: number) {
+    onScoreChange?.("totalTimeSpent", totalTimeSpent + elapsedTime);
+  }
+
+  function onCountdownFinished(elapsedTime: number) {
+    onScoreChange?.("skipped", skipped + 1);
+    onScoreChange?.("totalTimeSpent", totalTimeSpent + elapsedTime);
+    proceed();
+  }
+
+  function onAnswer(answer: IAnswer) {
+    if (answer === "correct") {
+      onScoreChange?.("score", score + 10);
+    } else {
+      onScoreChange?.("wrongAnswers", wrongAnswers + 1);
+    }
+    proceed();
+  }
+
   function onSkip(event: MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    onScoreChange?.("skipped", skipped + 1);
+    proceed();
+  }
+
+  function onNext(event: MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     if (!questions) return;
     const [removedItem] = questions.splice(currentQuestion, 1);
@@ -79,16 +103,21 @@ export function Quiz() {
 
   return (
     <Container>
-      <div>{score}</div>
       {questions && (
-        <Question question={questions[currentQuestion]} onAnswer={onAnswer} />
+        <Question
+          question={questions[currentQuestion]}
+          onAnswer={onAnswer}
+          onCountdownFinished={onCountdownFinished}
+          onCountdownReset={onCountdownReset}
+        />
       )}
       <BtnsGrid>
+        <Button onClick={onSkip}>Skip</Button>
         <Button
           disabled={currentQuestion === questions.length - 1}
-          onClick={onSkip}
+          onClick={onNext}
         >
-          Skip
+          Next
         </Button>
       </BtnsGrid>
     </Container>
@@ -112,7 +141,7 @@ const Container = styled.div`
 const BtnsGrid = styled.div`
   display: grid;
   gap: 1rem;
-  grid-template-columns: repeat(1, 1fr);
+  grid-template-columns: repeat(2, 1fr);
 `;
 
 const Button = styled.button`
