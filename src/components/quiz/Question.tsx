@@ -16,7 +16,9 @@ const TIME_LIMIT = {
 
 export function Question({
   question: { difficulty, type, question, correct_answer, incorrect_answers },
+  shouldReset,
   onAnswer,
+  onChangeShouldReset,
   onCountdownReset,
   onCountdownFinished,
 }: IQuestionProps) {
@@ -24,10 +26,9 @@ export function Question({
   const [allAnswers, setAllAnswers] = useState<string[]>([]);
   difficulty === "easy";
   const [timer, setTimer] = useState(TIME_LIMIT[difficulty]);
-  const [shouldReset, setShouldReset] = useState(false);
 
   useEffect(() => {
-    setShouldReset(false);
+    onChangeShouldReset(false);
     if (type === "boolean") {
       setAllAnswers(["True", "False"]);
     } else {
@@ -37,6 +38,7 @@ export function Question({
       }
       setAllAnswers(incorrect_answers);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type, correct_answer, incorrect_answers, difficulty]);
 
   useEffect(() => {
@@ -51,13 +53,13 @@ export function Question({
 
   function onClick(event: MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
-    setShouldReset(true);
+    onChangeShouldReset(true);
     setTimer(TIME_LIMIT[difficulty]);
     setAnswer(event.currentTarget.name);
   }
 
   function _onCountdownFinished(elapsedTime: number) {
-    setShouldReset(true);
+    onChangeShouldReset(true);
     onCountdownFinished(elapsedTime);
   }
 

@@ -44,6 +44,7 @@ export function Quiz() {
 
   const [currentQuestion, setCurrentQuestion] = useState<number>(0);
   const [questions, setQuestions] = useState<IQuestion[] | undefined>();
+  const [shouldReset, setShouldReset] = useState(false);
 
   useEffect(() => {
     if (status === "success") {
@@ -82,6 +83,7 @@ export function Quiz() {
 
   function onSkip(event: MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
+    setShouldReset(true);
     onScoreChange?.("skipped", skipped + 1);
     proceed();
   }
@@ -89,6 +91,7 @@ export function Quiz() {
   function onNext(event: MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     if (!questions) return;
+    setShouldReset(true);
     const [removedItem] = questions.splice(currentQuestion, 1);
     questions.push(removedItem);
     setQuestions([...questions]);
@@ -107,6 +110,8 @@ export function Quiz() {
         <Question
           question={questions[currentQuestion]}
           onAnswer={onAnswer}
+          shouldReset={shouldReset}
+          onChangeShouldReset={setShouldReset}
           onCountdownFinished={onCountdownFinished}
           onCountdownReset={onCountdownReset}
         />
