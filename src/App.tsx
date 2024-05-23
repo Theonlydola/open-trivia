@@ -1,6 +1,6 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { Home, Categories, Quiz } from "./components";
+import { Home, Categories, Quiz, Results } from "./components";
 import { ThemeProvider } from "styled-components";
 import { SessionProvider, ScoreProvider } from "./contexts";
 
@@ -23,6 +23,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/categories" element={<Categories />} />
                 <Route path="/quiz" element={<Quiz />} />
+                <Route path="/results" element={<Results />} />
               </Routes>
             </ScoreProvider>
           </SessionProvider>
