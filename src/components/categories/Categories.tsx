@@ -3,11 +3,14 @@ import styled from "styled-components";
 import { useScoreContext, useSessionContext } from "../../contexts";
 import { useFetchCategories } from "../../queries";
 import { useNavigate } from "react-router-dom";
+import { ErrorPage, Loading } from "../common";
 
 export function Categories() {
   const navigate = useNavigate();
   const { sessionToken } = useSessionContext();
-  const categories = useFetchCategories({ enabled: !!sessionToken });
+  const { data: categories, status } = useFetchCategories({
+    enabled: !!sessionToken,
+  });
   const { playedCategories, onScoreChange } = useScoreContext();
   const [currentCategory, setCurrentCategory] = useState<number>(-1);
 
@@ -28,11 +31,14 @@ export function Categories() {
     };
   }, []);
 
+  if (status === "loading") return <Loading />;
+  if (status === "error") return <ErrorPage />;
+
   return (
     <Container>
       <h1>Questions Categories</h1>
       <CategoriesGrid>
-        {categories.data?.trivia_categories.map(({ id, name }) => (
+        {categories?.trivia_categories.map(({ id, name }) => (
           <CategoryCell
             key={id}
             name={String(id)}
