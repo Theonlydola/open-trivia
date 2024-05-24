@@ -30,11 +30,3 @@ Think "Who Wants to Be a Millionaire" meets an engaging learning experience. Ope
 3. Run the development server: `yarn dev`
 4. Open http://localhost:5173/ in your browser.
 
-**Embrace the Challenge!**
-
-Dive into the world of Open Trivia and expand your knowledge with this fun and engaging game. Enjoy the journey, learn something new, and see how well you score!Ï
-
-**Contributing:**
-
-We welcome contributions to this project! If you have ideas or want to help improve the game, feel free to fork the repository and submit a pull request.
-
