@@ -21,7 +21,18 @@ export function Categories() {
 
   function onSubmit(event: MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
-    onScoreChange?.("playedCategories", [...playedCategories, currentCategory]);
+    onScoreChange?.("playedCategories", [
+      ...playedCategories,
+      {
+        id: currentCategory,
+        name: categories?.trivia_categories.find(
+          (category) => category.id === currentCategory
+        )?.name,
+        correctAnswers: 0,
+        wrongAnswers: 0,
+        skippedQuestions: 0,
+      },
+    ]);
     navigate("/quiz");
   }
 
@@ -44,7 +55,9 @@ export function Categories() {
             name={String(id)}
             onClick={onClick}
             selected={currentCategory === id}
-            disabled={playedCategories?.includes(id)}
+            disabled={playedCategories?.some(
+              (playedCategory) => playedCategory.id === id
+            )}
           >
             {name}
           </CategoryCell>

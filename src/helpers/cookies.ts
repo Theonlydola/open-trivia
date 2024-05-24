@@ -53,3 +53,9 @@ export function getCookie(name: ICookieName) {
 export function deleteCookie(name: ICookieName) {
   Cookies.remove(name);
 }
+
+export function resetCookies() {
+  Object.values(CookieNameOptions).forEach((name) => {
+    deleteCookie(name);
+  });
+}

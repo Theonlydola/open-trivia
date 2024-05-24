@@ -15,14 +15,24 @@ export function Countdown({
 }: ICountdownProps) {
   const [countDown, setCountDown] = useState(targetTimeInMinutes * 60000);
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [isFinished, setIsFinished] = useState(false);
 
   useEffect(() => {
+    if (onFinish && isFinished) {
+      onFinish(elapsedTime);
+      setIsFinished(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [elapsedTime, isFinished]);
+
+  useEffect(() => {
+    setIsFinished(false);
     const intervalId = setInterval(() => {
       setCountDown((prevCountDown) => {
         const newCountDown = Math.max(prevCountDown - 1000, 0);
         setElapsedTime(elapsedTime + 1);
         if (newCountDown === 0) {
-          if (onFinish) onFinish(elapsedTime);
+          setIsFinished(true);
         }
         return newCountDown;
       });

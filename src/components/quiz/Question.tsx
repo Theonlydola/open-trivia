@@ -75,9 +75,12 @@ export function Question({
       <H2 dangerouslySetInnerHTML={{ __html: `${question}` }} />
       <AnswersGrid>
         {allAnswers.map((answer, index) => (
-          <AnswerCell key={`answer-${index}`} name={answer} onClick={onClick}>
-            {answer}
-          </AnswerCell>
+          <AnswerCell
+            key={`answer-${index}`}
+            name={answer}
+            onClick={onClick}
+            dangerouslySetInnerHTML={{ __html: `${answer}` }}
+          />
         ))}
       </AnswersGrid>
     </>

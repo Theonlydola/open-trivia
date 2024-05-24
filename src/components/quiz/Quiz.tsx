@@ -15,8 +15,7 @@ export function Quiz() {
     maxQuestions,
     playedCategories,
     score,
-    wrongAnswers,
-    skipped,
+    timeSpentPerQuestion,
     totalTimeSpent,
     maxCategories,
     onScoreChange,
@@ -32,7 +31,7 @@ export function Quiz() {
     {
       amount: maxQuestions,
       token: sessionToken,
-      category: playedCategories[playedCategories?.length - 1],
+      category: playedCategories[playedCategories?.length - 1].id,
       difficulty: difficulty as DIFFICULTY,
     },
     {
@@ -57,26 +56,55 @@ export function Quiz() {
     if (currentQuestion < questions.length - 1)
       setCurrentQuestion(currentQuestion + 1);
     else {
-      if (playedCategories.length >= maxCategories) navigate("/results");
+      if (playedCategories.length >= maxCategories - 1) navigate("/results");
       else navigate("/categories");
     }
   }
 
   function onCountdownReset(elapsedTime: number) {
+    onScoreChange?.("timeSpentPerQuestion", [
+      ...timeSpentPerQuestion,
+      elapsedTime,
+    ]);
     onScoreChange?.("totalTimeSpent", totalTimeSpent + elapsedTime);
   }
 
   function onCountdownFinished(elapsedTime: number) {
-    onScoreChange?.("skipped", skipped + 1);
+    const currentCategory = playedCategories.pop();
+    onScoreChange?.("playedCategories", [
+      ...playedCategories,
+      {
+        ...currentCategory,
+        skippedQuestions: (currentCategory?.skippedQuestions || 0) + 1,
+      },
+    ]);
+    onScoreChange?.("timeSpentPerQuestion", [
+      ...timeSpentPerQuestion,
+      elapsedTime,
+    ]);
     onScoreChange?.("totalTimeSpent", totalTimeSpent + elapsedTime);
     proceed();
   }
 
   function onAnswer(answer: IAnswer) {
+    const currentCategory = playedCategories.pop();
     if (answer === "correct") {
       onScoreChange?.("score", score + 10);
+      onScoreChange?.("playedCategories", [
+        ...playedCategories,
+        {
+          ...currentCategory,
+          correctAnswers: (currentCategory?.correctAnswers || 0) + 1,
+        },
+      ]);
     } else {
-      onScoreChange?.("wrongAnswers", wrongAnswers + 1);
+      onScoreChange?.("playedCategories", [
+        ...playedCategories,
+        {
+          ...currentCategory,
+          wrongAnswers: (currentCategory?.wrongAnswers || 0) + 1,
+        },
+      ]);
     }
     proceed();
   }
@@ -84,7 +112,14 @@ export function Quiz() {
   function onSkip(event: MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     setShouldReset(true);
-    onScoreChange?.("skipped", skipped + 1);
+    const currentCategory = playedCategories.pop();
+    onScoreChange?.("playedCategories", [
+      ...playedCategories,
+      {
+        ...currentCategory,
+        skippedQuestions: (currentCategory?.skippedQuestions || 0) + 1,
+      },
+    ]);
     proceed();
   }
 
