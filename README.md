@@ -20,7 +20,7 @@ Think "Who Wants to Be a Millionaire" meets an engaging learning experience. Ope
 - <img src="https://github.com/Theonlydola/open-trivia/assets/33991085/2bc0dbc6-cc13-4328-99d9-e6bffc961909"  width="20" /> **TypeScript** 
 - <img src="https://github.com/Theonlydola/open-trivia/assets/33991085/1f43cb8d-bea0-40b5-853a-6783a58646d5" width="20" /> **React Query:** Simplifies data fetching and state management.
 - <img src="https://github.com/Theonlydola/open-trivia/assets/33991085/d3a5303b-0d42-451f-86ea-f878743eb423" width="20" alt="styled-componets">  **Styled-Components:** CSS-in-JS styling.
-- <img src="https://github.com/Theonlydola/open-trivia/assets/33991085/55c5f34c-4391-4997-8bef-d42ae1317006" width="25" /> **ApexCharts:**  Creates interactive and customizable charts.
+- <img src="https://github.com/Theonlydola/open-trivia/assets/33991085/55c5f34c-4391-4997-8bef-d42ae1317006" width="20" /> **ApexCharts:**  Creates interactive and customizable charts.
 - <img src="https://github.com/Theonlydola/open-trivia/assets/33991085/92e9d602-3314-47d7-bba6-5495e6ab6184" width="20"/> **Vite:** Lightning-fast development server for a smooth development experience.
 
 **Getting Started:**
