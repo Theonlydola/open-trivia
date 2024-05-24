@@ -16,10 +16,11 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
-        <BrowserRouter>
+        <BrowserRouter basename={`/${import.meta.env.BASE_URL}`}>
           <SessionProvider>
             <ScoreProvider>
               <Routes>
+                <Route path="/*" element={<Home />} />
                 <Route path="/" element={<Home />} />
                 <Route path="/categories" element={<Categories />} />
                 <Route path="/quiz" element={<Quiz />} />
