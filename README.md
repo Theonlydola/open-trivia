@@ -1,4 +1,4 @@
-**Open Trivia**
+**[Open Trivia](https://theonlydola.github.io/open-trivia/)**
 
 ** A Fun and Engaging Trivia Game! **
 
