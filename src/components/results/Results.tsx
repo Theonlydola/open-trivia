@@ -67,15 +67,15 @@ export function Results() {
           <BarChart
             data={[
               {
-                name: playedCategories[0].name?.substring(0, 14),
+                name: playedCategories[0].name?.substring(0, 10),
                 data: correctAnswersArray,
               },
               {
-                name: playedCategories[1].name?.substring(0, 14),
+                name: playedCategories[1].name?.substring(0, 10),
                 data: wrongAnswersArray,
               },
               {
-                name: playedCategories[2].name?.substring(0, 14),
+                name: playedCategories[2].name?.substring(0, 10),
                 data: skippedQuestions,
               },
             ]}
