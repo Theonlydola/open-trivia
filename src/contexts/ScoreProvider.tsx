@@ -2,6 +2,7 @@ import { ReactNode, createContext, useEffect, useState } from "react";
 import { CookieNameOptions, getObjectCookie, setCookie } from "../helpers";
 import { useNavigate } from "react-router-dom";
 import { IPlayedCategory } from "./contexts.types";
+import { useSessionContext } from "./contexts.hooks";
 
 type IScore = {
   playedCategories: IPlayedCategory[];
@@ -34,7 +35,7 @@ export function ScoreProvider({ children }: { children: ReactNode }) {
     maxQuestions: 3,
     onScoreChange,
   };
-
+  const { sessionToken } = useSessionContext();
   const [score, setScore] = useState<IScore>(_score);
 
   useEffect(() => {
@@ -47,8 +48,12 @@ export function ScoreProvider({ children }: { children: ReactNode }) {
   }, [score]);
 
   useEffect(() => {
-    if (score.playedCategories.length >= score.maxCategories)
+    if (score.playedCategories.length >= score.maxCategories) {
+      console.log(score.playedCategories.length);
       navigate("/results");
+    } else if (sessionToken) {
+      navigate("/categories");
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

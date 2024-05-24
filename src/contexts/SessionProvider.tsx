@@ -85,13 +85,6 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [difficulty, playerName, sessionToken]);
 
-  useEffect(() => {
-    if (sessionToken) {
-      navigate("/categories");
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <SessionContext.Provider value={session}>
       {children}
